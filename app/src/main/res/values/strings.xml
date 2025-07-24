@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">TravelHelper</string>
+    <string name="title_activity_home_page_view">HomePageView</string>
+</resources>
