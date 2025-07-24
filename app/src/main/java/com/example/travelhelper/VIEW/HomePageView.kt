@@ -33,7 +33,7 @@ class HomePageView : ComponentActivity() {
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Text(
-        text = "Bye $name!",
+        text = "Byeeeeeeeeeee $name!",
         modifier = modifier
     )
 }
