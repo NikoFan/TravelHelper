@@ -8,7 +8,7 @@ class HomePageVM : ViewModel() {
 
     /*
     * Установка наименования выбранной темы
-    * Возврат наименования выбранной темы
+    * Возврат текущего наименования выбранной темы
     */
     public var setSelectedTopicName : String?
         set(value) {
