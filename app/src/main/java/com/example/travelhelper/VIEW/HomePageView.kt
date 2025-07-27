@@ -33,11 +33,7 @@ class HomePageView : ComponentActivity() {
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Text(
-<<<<<<< HEAD
         text = "Hiiiiiiiii~~~~~~ $name!",
-=======
-        text = "Byeeeeeeeeeee $name!",
->>>>>>> master
         modifier = modifier
     )
 }
@@ -49,3 +45,4 @@ fun GreetingPreview() {
         Greeting("Android")
     }
 }
+git
