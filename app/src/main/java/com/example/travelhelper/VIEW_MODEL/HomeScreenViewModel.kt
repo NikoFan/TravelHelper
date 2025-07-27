@@ -8,6 +8,8 @@ import com.example.travelhelper.MODEL.Topics
 class HomeScreenViewModel : ViewModel() {
     private var listOfTopics = mutableListOf<Topics>()
     private val _topics = mutableStateOf<List<Topics>>(emptyList())
+
+    // Получение тем
     public val topicInformation: State<List<Topics>> = _topics
 
     /*
