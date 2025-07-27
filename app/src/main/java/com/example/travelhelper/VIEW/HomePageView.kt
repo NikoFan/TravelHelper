@@ -125,7 +125,7 @@ fun CreateScrollArea(
     vm.AddNewTopicInformation(
         topicInformation = Topics(
             topicId = 1,
-            topicTitle = "Fire",
+            topicTitle = "Fire22",
             topicImage = 12,
             topicMainColor = "#f3a180",
             topicSecondColor = "#cf0a13"
