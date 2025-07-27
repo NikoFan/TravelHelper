@@ -1,5 +1,6 @@
 package com.example.travelhelper.MODEL
 
+// Модель основныз тем
 data class Topics (
     val topicId: Int,
     val topicTitle: String,
