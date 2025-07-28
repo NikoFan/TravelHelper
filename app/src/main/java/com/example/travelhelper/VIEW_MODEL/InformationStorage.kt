@@ -1,4 +1,4 @@
-package com.example.travelhelper.DataContainer
+package com.example.travelhelper.VIEW_MODEL
 
 // Объект-хранилище для статической информации
 object InformationStorage {

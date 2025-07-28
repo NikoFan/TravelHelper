@@ -1,9 +1,11 @@
 package com.example.travelhelper.VIEW
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -27,9 +29,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.BiasAlignment
-
+import com.example.travelhelper.R
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -59,7 +63,8 @@ class HomePageView : ComponentActivity() {
                 .fillMaxSize()
         ) {
             CreateScrollArea(
-                vm = viewModel
+                vm = viewModel,
+                context = LocalContext.current
             )
         }
     }
@@ -98,12 +103,27 @@ fun TopicCardConstructor(topic: Topics){
                 .fillMaxWidth(0.8f),
 
         ){
+            val context = LocalContext.current
+            val resId = context.resources.getIdentifier(
+                topic.topicImage,
+                "drawable",
+                context.packageName
+            )
+//            val iconPainter = remember(topic.topicImage) {
+//                get(context, topic.topicImage) ?: painterResource(R.drawable.ic_launcher_background)
+//            }
             Column(
                 modifier = Modifier
                     .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Bottom
             ) {
+                Image(
+                    modifier = Modifier
+                        .fillMaxSize(0.65f),
+                    painter = painterResource(resId),
+                    contentDescription = "Topic Icon"
+                )
                 Text(
                     modifier = Modifier
                         .padding(10.dp),
@@ -120,37 +140,11 @@ fun TopicCardConstructor(topic: Topics){
 
 @Composable
 fun CreateScrollArea(
-    vm: HomeScreenViewModel
+    vm: HomeScreenViewModel,
+    context: Context
 ) {
-    vm.AddNewTopicInformation(
-        topicInformation = Topics(
-            topicId = 1,
-            topicTitle = "Fire22",
-            topicImage = 12,
-            topicMainColor = "#f3a180",
-            topicSecondColor = "#cf0a13"
-
-        )
-    )
-    vm.AddNewTopicInformation(
-        topicInformation = Topics(
-            topicId = 2,
-            topicTitle = "Water",
-            topicImage = 12,
-            topicMainColor = "#7580fe",
-            topicSecondColor = "#2c09b8"
-
-        )
-    )
-    vm.AddNewTopicInformation(
-        topicInformation = Topics(
-            topicId = 3,
-            topicTitle = "Weapon",
-            topicImage = 12,
-            topicMainColor = "#eec185",
-            topicSecondColor = "#ae7913"
-
-        )
+    vm.ReadJson(
+        context = context
     )
     val topics by vm.topicInformation
     println(topics)
