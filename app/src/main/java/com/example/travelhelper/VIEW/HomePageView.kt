@@ -141,10 +141,6 @@ fun TopicCardConstructor(topic: Topics) {
         modifier = Modifier
             .fillMaxWidth()
 
-
-
-
-
             ///////////////////////////////////////////////////CЫН СТЕКЛОПАКЕТА
             .padding(8.dp),
         colors = CardDefaults.cardColors(
