@@ -4,16 +4,19 @@ import android.content.Context
 import com.google.gson.JsonObject
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.*
-import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.ViewModel
 import com.example.travelhelper.MODEL.Topics
 import com.example.travelhelper.R
 import com.google.gson.Gson
-import kotlin.reflect.typeOf
 
 class HomeScreenViewModel() : ViewModel() {
+    private var listOfTopics = mutableListOf<Topics>()
+    private val _topics = mutableStateOf<List<Topics>>(emptyList())
 
+    // Получение тем
+    public val topicInformation: State<List<Topics>> = _topics
+
+    // Метод для чтения JSON файла
     fun ReadJson(
         context: Context
     ) {
@@ -35,6 +38,7 @@ class HomeScreenViewModel() : ViewModel() {
             val key = entry.key.toInt()
             val value = entry.value.asJsonObject
 
+            // Добавление объектов модели Topics в список
             AddNewTopicInformation(
                 topicInformation = Topics(
                     topicId = key,
@@ -49,16 +53,8 @@ class HomeScreenViewModel() : ViewModel() {
 
     }
 
-    private var listOfTopics = mutableListOf<Topics>()
-    private val _topics = mutableStateOf<List<Topics>>(emptyList())
 
-    // Получение тем
-    public val topicInformation: State<List<Topics>> = _topics
-
-    /*
-    * Установка наименования выбранной темы
-    * Возврат текущего наименования выбранной темы
-    */
+    // Метод добавления объектов в список
     public fun AddNewTopicInformation(
         topicInformation: Topics
     ) {
