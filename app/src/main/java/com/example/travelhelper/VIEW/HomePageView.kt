@@ -1,11 +1,14 @@
 package com.example.travelhelper.VIEW
 
+import android.app.Application
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
+import androidx.annotation.RestrictTo
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -52,12 +55,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
+import androidx.lifecycle.ViewModelProvider
+
 import com.example.travelhelper.MODEL.Topics
 import com.example.travelhelper.VIEW.ui.theme.TravelHelperTheme
 import com.example.travelhelper.VIEW_MODEL.HomeScreenViewModel
+import androidx.lifecycle.lifecycleScope
+import com.example.travelhelper.GitHubJsonApi.App
+import kotlinx.coroutines.launch
 
 class HomePageView : ComponentActivity() {
-    private val viewModel = HomeScreenViewModel()
+    private val viewModel by viewModels<HomeScreenViewModel> {
+        ViewModelProvider.AndroidViewModelFactory.getInstance(application)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,9 +85,11 @@ class HomePageView : ComponentActivity() {
         val isLandscape = configuration.screenWidthDp > configuration.screenHeightDp
 
         if (isLandscape) {
-            LandscapeScreen(viewModel)
+            LandscapeScreen(
+                viewModel = viewModel)
         } else {
-            PortraitScreen(viewModel)
+            PortraitScreen(
+                viewModel = viewModel)
         }
     }
 
@@ -92,10 +104,14 @@ class HomePageView : ComponentActivity() {
 
 }
 
+
 @Composable
-fun PortraitScreen(viewModel: HomeScreenViewModel) {
+fun PortraitScreen(
+    viewModel: HomeScreenViewModel
+) {
     // Состояние для языка с сохранением при повороте
     var currentLanguage by rememberSaveable { mutableStateOf("ru") }
+    val context: Context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -116,7 +132,13 @@ fun PortraitScreen(viewModel: HomeScreenViewModel) {
         ) {
             // Кнопка обновления данных
             Button(
-                onClick = { Log.d("MyLog", "Обновление данных...") },
+                onClick = {
+                    Log.d("MyLog", "Обновление данных...")
+                    viewModel.TakeJson(
+                        context = context
+                    )
+
+                },
                 shape = RoundedCornerShape(10.dp),
                 modifier = Modifier.width(210.dp),
                 colors = ButtonDefaults.buttonColors(
@@ -222,7 +244,8 @@ fun CreateScrollAreaVertical(vm: HomeScreenViewModel, context: Context) {
         items(topics) { topic ->
             TopicCardConstructor(
                 topic = topic,
-                cardHeightParam = 200)
+                cardHeightParam = 200
+            )
         }
     }
 }
