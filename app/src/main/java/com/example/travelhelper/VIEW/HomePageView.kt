@@ -75,15 +75,30 @@ class HomePageView : ComponentActivity() {
         val isLandscape = configuration.screenWidthDp > configuration.screenHeightDp
 
         if (isLandscape) {
-            LandscapeScreen(viewModel)
+            LandscapeScreen(
+                viewModel
+            )
         } else {
-            PortraitScreen(viewModel)
+            PortraitScreen(
+                viewModel,
+
+            )
+        }
+    }
+
+    @Preview(showBackground = true)
+    @Composable
+    fun PreviewFunction() {
+        TravelHelperTheme {
+            MainScreen()
         }
     }
 }
 
 @Composable
-fun PortraitScreen(viewModel: HomeScreenViewModel) {
+fun PortraitScreen(
+    viewModel: HomeScreenViewModel
+) {
     // Состояние для языка с сохранением при повороте
     var currentLanguage by rememberSaveable { mutableStateOf("ru") }
 
@@ -112,7 +127,7 @@ fun PortraitScreen(viewModel: HomeScreenViewModel) {
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.White,
                     contentColor = Color.Black
-            ),
+                ),
             ) {
                 Text("Обновить данные", fontSize = 18.sp)
             }
@@ -141,7 +156,9 @@ fun PortraitScreen(viewModel: HomeScreenViewModel) {
 }
 
 @Composable
-fun LandscapeScreen(viewModel: HomeScreenViewModel) {
+fun LandscapeScreen(
+    viewModel: HomeScreenViewModel
+) {
     // Состояние для языка с сохранением при повороте
     var currentLanguage by rememberSaveable { mutableStateOf("ru") }
 
@@ -180,7 +197,9 @@ fun LandscapeScreen(viewModel: HomeScreenViewModel) {
                     currentLanguage = if (currentLanguage == "ru") "en" else "ru"
                     Log.d("MyLog", "Язык изменен на: $currentLanguage")
                 },
-                modifier = Modifier.width(80.dp).height(48.dp),
+                modifier = Modifier
+                    .width(80.dp)
+                    .height(48.dp),
                 contentPadding = PaddingValues(3.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.White,
@@ -198,7 +217,10 @@ fun LandscapeScreen(viewModel: HomeScreenViewModel) {
 }
 
 @Composable
-fun CreateScrollAreaVertical(vm: HomeScreenViewModel, context: Context) {
+fun CreateScrollAreaVertical(
+    vm: HomeScreenViewModel,
+    context: Context
+) {
     vm.ReadJson(context = context)
     val topics by vm.topicInformation
 
@@ -208,13 +230,19 @@ fun CreateScrollAreaVertical(vm: HomeScreenViewModel, context: Context) {
             .fillMaxHeight(0.9f),
     ) {
         items(topics) { topic ->
-            TopicCardConstructor(topic = topic)
+            TopicCardConstructor(
+                topic = topic,
+                cardHeightParm = 200
+            )
         }
     }
 }
 
 @Composable
-fun CreateScrollAreaHorizontal(vm: HomeScreenViewModel, context: Context) {
+fun CreateScrollAreaHorizontal(
+    vm: HomeScreenViewModel,
+    context: Context
+) {
     vm.ReadJson(context = context)
     val topics by vm.topicInformation
 
@@ -224,13 +252,19 @@ fun CreateScrollAreaHorizontal(vm: HomeScreenViewModel, context: Context) {
             .fillMaxHeight(0.8f),
     ) {
         items(topics) { topic ->
-            TopicCardConstructor(topic = topic)
+            TopicCardConstructor(
+                topic = topic,
+                cardHeightParm = 300
+            )
         }
     }
 }
 
 @Composable
-fun TopicCardConstructor(topic: Topics) {
+fun TopicCardConstructor(
+    topic: Topics,
+    cardHeightParm: Int
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -241,7 +275,7 @@ fun TopicCardConstructor(topic: Topics) {
     ) {
         Box(
             modifier = Modifier
-                .height(300.dp)
+                .height(cardHeightParm.dp) // Высота карточки
                 .background(color = Color(color = topic.topicMainColor.toColorInt()))
                 .fillMaxWidth(0.8f),
         ) {
@@ -252,7 +286,8 @@ fun TopicCardConstructor(topic: Topics) {
                 context.packageName
             )
             Column(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Bottom
             ) {
