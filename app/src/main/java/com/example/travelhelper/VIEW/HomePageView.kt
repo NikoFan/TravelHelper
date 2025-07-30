@@ -97,7 +97,7 @@ fun PortraitScreen(viewModel: HomeScreenViewModel) {
             context = LocalContext.current
         )
 
-        // Кнопки для портретного режима (встроенные)
+        // Кнопки для портретного режима
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -154,7 +154,7 @@ fun LandscapeScreen(viewModel: HomeScreenViewModel) {
             vm = viewModel,
             context = LocalContext.current
         )
-
+        // Кнопки для альбомного режима
         Row(
             modifier = Modifier
                 .fillMaxWidth()
