@@ -20,25 +20,30 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.BiasAlignment
 import com.example.travelhelper.R
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
@@ -53,117 +58,213 @@ import com.example.travelhelper.VIEW_MODEL.HomeScreenViewModel
 
 class HomePageView : ComponentActivity() {
     private val viewModel = HomeScreenViewModel()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             TravelHelperTheme {
-                UiConstructor()
+                MainScreen()
             }
         }
     }
 
     @Composable
-    private fun UiConstructor() {
+    fun MainScreen() {
+        val configuration = LocalConfiguration.current
+        val isLandscape = configuration.screenWidthDp > configuration.screenHeightDp
 
-        // тут будет хранится текущий язык и при любых изменениях интершейс отреагирует
-        var currentLanguage by remember { mutableStateOf("ru") }
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            CreateScrollArea(
-                vm = viewModel,
-                context = LocalContext.current
-            )
-
-
-
-            //пока это почти все что я потрогал, выносить в отдельную функцию создание 2х кнопок я пока не вижу
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 28.dp)
-                    .height(48.dp),
-            )
-            {
-                Button(
-                    onClick = {
-                        Log.d(
-                            "MyLog", "кнопка - Друг, тебе просто кнопку сделать," +
-                                    " настроить кликабл, чтобы просто принтовал. Я потом сделаю " +
-                                    "обнову - скажу переделать кликабл"
-                        )
-                    },
-                    shape = RoundedCornerShape(10.dp)
-                ) {
-                    Text(text = "Обновить данные",
-                        fontSize = 18.sp)
-                }
-                Button(
-                    onClick = {
-                        currentLanguage = if (currentLanguage == "ru") "en" else "ru"
-                        Log.d("MyLog", "теперь язык - $currentLanguage")
-                    },
-                    modifier = Modifier
-                        .size(48.dp),
-                    contentPadding = PaddingValues(3.dp)
-                )
-
-                {
-                    Text(
-                        //пока буковами, нет тз - результат хз
-                        text = if (currentLanguage == "ru") "EN" else "RU",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-            }
+        if (isLandscape) {
+            LandscapeScreen(viewModel)
+        } else {
+            PortraitScreen(viewModel)
         }
     }
 
     @Preview(showBackground = true)
     @Composable
-    fun GreetingPreview() {
+    fun PreviewFunction() {
         TravelHelperTheme {
-            UiConstructor()
+            MainScreen()
+        }
+    }
 
+
+}
+
+@Composable
+fun PortraitScreen(viewModel: HomeScreenViewModel) {
+    // Состояние для языка с сохранением при повороте
+    var currentLanguage by rememberSaveable { mutableStateOf("ru") }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(8.dp)
+    ) {
+        CreateScrollAreaVertical(
+            vm = viewModel,
+            context = LocalContext.current
+        )
+
+        // Кнопки для портретного режима (встроенные)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp, vertical = 10.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            // Кнопка обновления данных
+            Button(
+                onClick = { Log.d("MyLog", "Обновление данных...") },
+                shape = RoundedCornerShape(10.dp),
+                modifier = Modifier.width(210.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.White,
+                    contentColor = Color.Black
+                ),
+            ) {
+                Text("Обновить данные", fontSize = 18.sp)
+            }
+
+            // Кнопка переключения языка
+            Button(
+                onClick = {
+                    currentLanguage = if (currentLanguage == "ru") "en" else "ru"
+                    Log.d("MyLog", "Язык изменен на: $currentLanguage")
+                },
+                modifier = Modifier.size(48.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.White,
+                    contentColor = Color.Black
+                ),
+                contentPadding = PaddingValues(3.dp)
+            ) {
+                Text(
+                    text = if (currentLanguage == "ru") "EN" else "RU",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
         }
     }
 }
 
+@Composable
+fun LandscapeScreen(viewModel: HomeScreenViewModel) {
+    // Состояние для языка с сохранением при повороте
+    var currentLanguage by rememberSaveable { mutableStateOf("ru") }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(8.dp)
+    ) {
+        CreateScrollAreaHorizontal(
+            vm = viewModel,
+            context = LocalContext.current
+        )
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 40.dp, vertical = 15.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            // Кнопка обновления данных (альбомная версия)
+            Button(
+                onClick = { Log.d("MyLog", "Обновление данных (альбомный)...") },
+                shape = RoundedCornerShape(10.dp),
+                modifier = Modifier.width(250.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.White,
+                    contentColor = Color.Black
+                ),
+            ) {
+                Text("Обновить данные", fontSize = 18.sp)
+            }
+
+            // Кнопка переключения языка (альбомная версия)
+            Button(
+                onClick = {
+                    currentLanguage = if (currentLanguage == "ru") "en" else "ru"
+                    Log.d("MyLog", "Язык изменен на: $currentLanguage")
+                },
+                modifier = Modifier
+                    .width(80.dp)
+                    .height(48.dp),
+                contentPadding = PaddingValues(3.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.White,
+                    contentColor = Color.Black
+                ),
+            ) {
+                Text(
+                    text = if (currentLanguage == "ru") "English" else "Русский",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        }
+    }
+}
 
 @Composable
-fun TopicCardConstructor(topic: Topics) {
+fun CreateScrollAreaVertical(vm: HomeScreenViewModel, context: Context) {
+    vm.ReadJson(context = context)
+    val topics by vm.topicInformation
+
+    LazyColumn(
+        modifier = Modifier
+            .padding(20.dp)
+            .fillMaxHeight(0.9f),
+    ) {
+        items(topics) { topic ->
+            TopicCardConstructor(
+                topic = topic,
+                cardHeightParam = 200)
+        }
+    }
+}
+
+@Composable
+fun CreateScrollAreaHorizontal(vm: HomeScreenViewModel, context: Context) {
+    vm.ReadJson(context = context)
+    val topics by vm.topicInformation
+
+    LazyRow(
+        modifier = Modifier
+            .padding(20.dp)
+            .fillMaxHeight(0.8f),
+    ) {
+        items(topics) { topic ->
+            TopicCardConstructor(
+                topic = topic,
+                cardHeightParam = 200
+            )
+        }
+    }
+}
+
+@Composable
+fun TopicCardConstructor(
+    topic: Topics,
+    cardHeightParam: Int
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-
-
-
-
-
-            ///////////////////////////////////////////////////CЫН СТЕКЛОПАКЕТА
             .padding(8.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color(
-                color = topic.topicSecondColor.toColorInt()
-            )
+            containerColor = Color(color = topic.topicSecondColor.toColorInt())
         )
     ) {
         Box(
             modifier = Modifier
-                .height(200.dp)
-                .background(
-                    color = Color(
-                        color = topic.topicMainColor.toColorInt()
-                    )
-                )
+                .height(cardHeightParam.dp)
+                .background(color = Color(color = topic.topicMainColor.toColorInt()))
                 .fillMaxWidth(0.8f),
-
-            ) {
+        ) {
             val context = LocalContext.current
             val resId = context.resources.getIdentifier(
                 topic.topicImage,
@@ -171,62 +272,22 @@ fun TopicCardConstructor(topic: Topics) {
                 context.packageName
             )
             Column(
-                modifier = Modifier
-                    .fillMaxSize(),
+                modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Bottom
             ) {
                 Image(
-                    modifier = Modifier
-                        .fillMaxSize(0.65f),
+                    modifier = Modifier.fillMaxSize(0.65f),
                     painter = painterResource(resId),
                     contentDescription = "Topic Icon"
                 )
                 Text(
-                    modifier = Modifier
-                        .padding(10.dp),
-
+                    modifier = Modifier.padding(10.dp),
                     text = topic.topicTitle,
-                    fontSize = 30.sp,
+                    fontSize = 35.sp,
                     fontWeight = FontWeight.W500
                 )
             }
         }
     }
-}
-
-
-@Composable
-fun CreateScrollArea(
-    vm: HomeScreenViewModel,
-    context: Context
-) {
-    vm.ReadJson(
-        context = context
-    )
-    val topics by vm.topicInformation
-    println(topics)
-    LazyColumn(
-        modifier = Modifier
-
-
-
-
-
-
-
-            ///////////////////////////////////////////////////CЫН СТЕКЛОПАКЕТА
-            .padding(20.dp)
-            .fillMaxHeight(0.9f),
-    ) {
-        items(
-            topics
-        ) { topic ->
-            TopicCardConstructor(
-                topic = topic
-            )
-
-        }
-    }
-
 }
