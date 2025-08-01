@@ -75,14 +75,9 @@ class HomePageView : ComponentActivity() {
         val isLandscape = configuration.screenWidthDp > configuration.screenHeightDp
 
         if (isLandscape) {
-            LandscapeScreen(
-                viewModel
-            )
+            LandscapeScreen(viewModel)
         } else {
-            PortraitScreen(
-                viewModel,
-
-            )
+            PortraitScreen(viewModel)
         }
     }
 
@@ -93,12 +88,12 @@ class HomePageView : ComponentActivity() {
             MainScreen()
         }
     }
+
+
 }
 
 @Composable
-fun PortraitScreen(
-    viewModel: HomeScreenViewModel
-) {
+fun PortraitScreen(viewModel: HomeScreenViewModel) {
     // Состояние для языка с сохранением при повороте
     var currentLanguage by rememberSaveable { mutableStateOf("ru") }
 
@@ -156,9 +151,7 @@ fun PortraitScreen(
 }
 
 @Composable
-fun LandscapeScreen(
-    viewModel: HomeScreenViewModel
-) {
+fun LandscapeScreen(viewModel: HomeScreenViewModel) {
     // Состояние для языка с сохранением при повороте
     var currentLanguage by rememberSaveable { mutableStateOf("ru") }
 
@@ -217,10 +210,7 @@ fun LandscapeScreen(
 }
 
 @Composable
-fun CreateScrollAreaVertical(
-    vm: HomeScreenViewModel,
-    context: Context
-) {
+fun CreateScrollAreaVertical(vm: HomeScreenViewModel, context: Context) {
     vm.ReadJson(context = context)
     val topics by vm.topicInformation
 
@@ -232,17 +222,13 @@ fun CreateScrollAreaVertical(
         items(topics) { topic ->
             TopicCardConstructor(
                 topic = topic,
-                cardHeightParm = 200
-            )
+                cardHeightParam = 200)
         }
     }
 }
 
 @Composable
-fun CreateScrollAreaHorizontal(
-    vm: HomeScreenViewModel,
-    context: Context
-) {
+fun CreateScrollAreaHorizontal(vm: HomeScreenViewModel, context: Context) {
     vm.ReadJson(context = context)
     val topics by vm.topicInformation
 
@@ -254,7 +240,7 @@ fun CreateScrollAreaHorizontal(
         items(topics) { topic ->
             TopicCardConstructor(
                 topic = topic,
-                cardHeightParm = 300
+                cardHeightParam = 200
             )
         }
     }
@@ -263,7 +249,7 @@ fun CreateScrollAreaHorizontal(
 @Composable
 fun TopicCardConstructor(
     topic: Topics,
-    cardHeightParm: Int
+    cardHeightParam: Int
 ) {
     Card(
         modifier = Modifier
@@ -275,7 +261,7 @@ fun TopicCardConstructor(
     ) {
         Box(
             modifier = Modifier
-                .height(cardHeightParm.dp) // Высота карточки
+                .height(cardHeightParam.dp)
                 .background(color = Color(color = topic.topicMainColor.toColorInt()))
                 .fillMaxWidth(0.8f),
         ) {
@@ -286,8 +272,7 @@ fun TopicCardConstructor(
                 context.packageName
             )
             Column(
-                modifier = Modifier
-                    .fillMaxSize(),
+                modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Bottom
             ) {
