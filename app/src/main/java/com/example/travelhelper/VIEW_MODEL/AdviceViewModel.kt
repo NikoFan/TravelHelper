@@ -1,15 +1,17 @@
 package com.example.travelhelper.VIEW_MODEL
 
+import android.app.Application
 import android.content.Context
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.AndroidViewModel
 import com.example.travelhelper.MODEL.AdviceModel
 import com.example.travelhelper.R
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 
-class AdviceViewModel {
+class AdviceViewModel(private val app: Application) : AndroidViewModel(app) {
     // Список для хранения совевтов из JSON
     private val adviceListToSaveAdvicesFromJson = mutableStateListOf<AdviceModel>()
 

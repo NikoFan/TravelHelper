@@ -6,25 +6,18 @@ import com.google.gson.JsonObject
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.room.Room
-import androidx.room.RoomDatabase
-import com.example.travelhelper.GitHubJsonApi.App
 import com.example.travelhelper.GitHubJsonApi.AppDatabase
 import com.example.travelhelper.GitHubJsonApi.GitHubApiClient
 import com.example.travelhelper.GitHubJsonApi.JsonCache
-import com.example.travelhelper.MODEL.AdviceModel
 import com.example.travelhelper.MODEL.Topics
 import com.example.travelhelper.R
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
-import okio.IOException
 import java.io.IOError
 import kotlin.toString
 
 class HomeScreenViewModel(private val app: Application) : AndroidViewModel(app) {
-
 
     private var listOfTopics = mutableListOf<Topics>()
     private val _topics = mutableStateOf<List<Topics>>(emptyList())
@@ -36,29 +29,22 @@ class HomeScreenViewModel(private val app: Application) : AndroidViewModel(app) 
     ) {
         try {
 
-            // 1. Загружаем с GitHub
+            // Получение JSON текста с API gh-pages
             val response = GitHubApiClient.api.getRawJson()
-            println("response\n\n")
-            println(response)
 
-
-            val json = response
-            println(json)
-
-            // 2. Сохраняем в Room
-
+            // Сохранение JSON строки в Room
             saveJson(
                 context = context,
-                json = json
+                json = response
             )
 
 
-        } catch (e: IOError) {
+        } catch (e: Exception) {
             println("JSON Update failed")
         }
     }
 
-    fun TakeJson(
+    fun TakeJsonFromApiAndSaveIt(
         context: Context
     ) {
         viewModelScope.launch {
@@ -71,19 +57,21 @@ class HomeScreenViewModel(private val app: Application) : AndroidViewModel(app) 
         context: Context,
         json: String
     ) {
+        // Инициализация БД
         val db = AppDatabase.getInstance(context)
+        // Получение кеша для записи
         val cache = JsonCache(
-            jsonString = json)
+            jsonString = json
+        )
         viewModelScope.launch {
-            println(db.jsonCacheDao().saveCache(cache = cache))
+            // Добавление кеша в local room
+            db.jsonCacheDao().saveCache(cache = cache)
         }
-        var text = ""
         viewModelScope.launch {
             println(db.jsonCacheDao().getCache())
-            text = db.jsonCacheDao().getCache().toString()
+
         }
-        println("\n\n\n\n\n\n\n")
-        println(text)
+
     }
 
 
@@ -96,24 +84,21 @@ class HomeScreenViewModel(private val app: Application) : AndroidViewModel(app) 
 
             val db = AppDatabase.getInstance(context)
             var jsonText = ""
-
             viewModelScope.launch {
+                // Удаление данных, для проверки считывания
                 db.jsonCacheDao().clearAllData()
-
-
             }
             println("Data was deleted! See all data what exist\n\n\n")
             viewModelScope.launch {
-
-                jsonText =  db.jsonCacheDao().getCache().toString()
+                // Получение данных
+                jsonText = db.jsonCacheDao().getCache().toString()
             }
-            println(jsonText)
-            println(jsonText.isEmpty())
-            if (jsonText.isEmpty()){
+            if (jsonText.isEmpty()) {
                 ReadStaticStaticJsonFile(context)
             }
 
-        } catch (e: IOException) {
+        } catch (e: Exception) {
+            // Если сработала ошибка - прочитка стандартного файла
             ReadStaticStaticJsonFile(context)
         }
 
@@ -137,7 +122,7 @@ class HomeScreenViewModel(private val app: Application) : AndroidViewModel(app) 
         )
         val themes = jsonObject.getAsJsonObject("Темы")
 
-        println(themes)
+        println("themes: $themes")
         themes.entrySet().map { entry ->
             val key = entry.key.toInt()
             val value = entry.value.asJsonObject

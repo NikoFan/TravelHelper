@@ -10,7 +10,7 @@ import retrofit2.Response
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
 object GitHubApiClient {
-    private const val BASE_URL = "https://nikofan.github.io/jsonAPIforAndroid/"
+    private const val BASE_URL = "https://nikofan.github.io/AndroidJsonAPI/"
 
     // Интерфейс API с обработкой ошибок на низком уровне
     interface ApiService {
