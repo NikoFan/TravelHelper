@@ -1,6 +1,8 @@
 package com.example.travelhelper.VIEW
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -72,10 +74,12 @@ class HomePageView : ComponentActivity() {
 
         if (isLandscape) {
             LandscapeScreen(
-                viewModel = viewModel)
+                viewModel = viewModel
+            )
         } else {
             PortraitScreen(
-                viewModel = viewModel)
+                viewModel = viewModel
+            )
         }
     }
 
@@ -123,7 +127,6 @@ fun PortraitScreen(
                     viewModel.TakeJsonFromApiAndSaveIt(
                         context = context
                     )
-
                 },
                 shape = RoundedCornerShape(10.dp),
                 modifier = Modifier.width(210.dp),
@@ -162,6 +165,7 @@ fun PortraitScreen(
 fun LandscapeScreen(viewModel: HomeScreenViewModel) {
     // Состояние для языка с сохранением при повороте
     var currentLanguage by rememberSaveable { mutableStateOf("ru") }
+    val context: Context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -181,7 +185,12 @@ fun LandscapeScreen(viewModel: HomeScreenViewModel) {
         ) {
             // Кнопка обновления данных (альбомная версия)
             Button(
-                onClick = { Log.d("MyLog", "Обновление данных (альбомный)...") },
+                onClick = {
+                    Log.d("MyLog", "Обновление данных...")
+                    viewModel.TakeJsonFromApiAndSaveIt(
+                        context = context
+                    )
+                },
                 shape = RoundedCornerShape(10.dp),
                 modifier = Modifier.width(250.dp),
                 colors = ButtonDefaults.buttonColors(
@@ -228,7 +237,7 @@ fun CreateScrollAreaVertical(vm: HomeScreenViewModel, context: Context) {
             .fillMaxHeight(0.9f),
     ) {
         items(topics) { topic ->
-            TopicCardConstructor(
+            TopicCardsConstructor(
                 topic = topic,
                 cardHeightParam = 200
             )
@@ -247,26 +256,32 @@ fun CreateScrollAreaHorizontal(vm: HomeScreenViewModel, context: Context) {
             .fillMaxHeight(0.8f),
     ) {
         items(topics) { topic ->
-            TopicCardConstructor(
+            TopicCardsConstructor(
                 topic = topic,
-                cardHeightParam = 200
+                cardHeightParam = 270
             )
         }
     }
 }
 
 @Composable
-fun TopicCardConstructor(
+fun TopicCardsConstructor(
     topic: Topics,
     cardHeightParam: Int
 ) {
+    val context: Context = LocalContext.current
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color(color = topic.topicSecondColor.toColorInt())
-        )
+        ),
+        onClick = {
+            GoToCard(
+                context = context
+            )
+        }
     ) {
         Box(
             modifier = Modifier
@@ -299,4 +314,16 @@ fun TopicCardConstructor(
             }
         }
     }
+}
+
+
+fun GoToCard(
+    context: Context
+) {
+    context.startActivity(
+        Intent(
+            context,
+            AdvicesView::class.java
+        )
+    )
 }
