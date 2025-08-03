@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -225,7 +226,7 @@ fun ScrollAreaVertical(
         items(advicesList) { adviceModelObject ->
             AdviceCardConstructor(
                 advice = adviceModelObject,
-                cardHeightParam = 200
+                //cardHeightParam = 200
             )
         }
     }
@@ -247,7 +248,7 @@ fun ScrollAreaHorizontal(
         items(advicesList) { adviceModelObject ->
             AdviceCardConstructor(
                 advice = adviceModelObject,
-                cardHeightParam = 250
+                //cardHeightParam = 200
             )
         }
     }
@@ -255,8 +256,7 @@ fun ScrollAreaHorizontal(
 
 @Composable
 fun AdviceCardConstructor(
-    advice: AdviceModel,
-    cardHeightParam: Int
+    advice: AdviceModel
 ) {
     val context: Context = LocalContext.current
 
@@ -266,6 +266,7 @@ fun AdviceCardConstructor(
         advice.adviceModeDifficulty == "Сложно" -> RedCard
         else -> Color.LightGray
     }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -276,11 +277,13 @@ fun AdviceCardConstructor(
     ) {
         Box(
             modifier = Modifier
-                .height(cardHeightParam.dp)
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .wrapContentHeight() // Ключевая строка - автоматическая высота
         ) {
             Column(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(10.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
@@ -291,7 +294,6 @@ fun AdviceCardConstructor(
                         .padding(10.dp),
                     text = advice.adviceTitle,
                     softWrap = true,
-                    maxLines = 3,
                     fontSize = 30.sp,
                     textAlign = TextAlign.Center,
                     fontWeight = FontWeight.W500
