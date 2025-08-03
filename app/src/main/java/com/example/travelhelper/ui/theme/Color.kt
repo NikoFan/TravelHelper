@@ -9,3 +9,8 @@ val Pink80 = Color(0xFFEFB8C8)
 val Purple40 = Color(0xFF6650a4)
 val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
+val GreenCard = Color(0xFF6EDD6E)   // #4cc84c
+val YellowCard = Color(0xFFE6B065)  // #e6b065
+val RedCard = Color(0xFFDF8E8E)     // #df8e8e
+
+//Он не хочет кушать hex, самый простой вариант - заменить # на 0xFF, так теряется альфа канал, но он и не всегда нужен

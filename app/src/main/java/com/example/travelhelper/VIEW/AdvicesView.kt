@@ -16,10 +16,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
@@ -31,6 +34,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -42,7 +46,11 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.travelhelper.VIEW.ui.theme.TravelHelperTheme
 import com.example.travelhelper.VIEW_MODEL.AdviceViewModel
 import com.example.travelhelper.MODEL.AdviceModel
+import com.example.travelhelper.ui.theme.GreenCard
+import com.example.travelhelper.ui.theme.RedCard
+import com.example.travelhelper.ui.theme.YellowCard
 import kotlin.getValue
+
 
 
 class AdvicesView : ComponentActivity() {
@@ -98,7 +106,7 @@ fun PortraitScreen(
         adviceModel = AdviceModel(
             adviceIdNumber = 1,
             adviceTitle = "Название 1",
-            adviceBodyText = "Текст для первого названия",
+            adviceBodyText = "Текст для первого названия +++++",
             adviceModeDifficulty = "Легко"
         )
     )
@@ -106,7 +114,7 @@ fun PortraitScreen(
         adviceModel = AdviceModel(
             adviceIdNumber = 2,
             adviceTitle = "Название 2",
-            adviceBodyText = "Текст для первого названия",
+            adviceBodyText = "Текст для первого названияТекст для первого названияТекст для первого названияТекст для первого названия Текст для первого названияТекст для первого названияТекст для первого названияТекст для первого названия",
             adviceModeDifficulty = "Средняя"
         )
     )
@@ -114,6 +122,31 @@ fun PortraitScreen(
         adviceModel = AdviceModel(
             adviceIdNumber = 3,
             adviceTitle = "Название 3 длинное специально для проверки переноса",
+            adviceBodyText = "Текст для первого названия",
+            adviceModeDifficulty = "Сложно"
+        )
+    )
+    // Тестовое добавление данных в карточки
+    viewModel.AddAdviceToList(
+        adviceModel = AdviceModel(
+            adviceIdNumber = 4,
+            adviceTitle = "Название 4",
+            adviceBodyText = "Текст для первого названия +++++",
+            adviceModeDifficulty = "Легко"
+        )
+    )
+    viewModel.AddAdviceToList(
+        adviceModel = AdviceModel(
+            adviceIdNumber = 5,
+            adviceTitle = "Название 5",
+            adviceBodyText = "Текст для первого названияТекст для первого названияТекст для первого названияТекст для первого названия",
+            adviceModeDifficulty = "Средняя"
+        )
+    )
+    viewModel.AddAdviceToList(
+        adviceModel = AdviceModel(
+            adviceIdNumber = 6,
+            adviceTitle = "Название 6 длинное специально для проверки переноса",
             adviceBodyText = "Текст для первого названия",
             adviceModeDifficulty = "Сложно"
         )
@@ -137,7 +170,13 @@ fun PortraitScreen(
                     context = context
                 )
             },
-        ) { Text(text = "Назад") }
+            shape = RectangleShape,
+            modifier = Modifier.width(200.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.White,
+                contentColor = Color.Black
+            ),
+        ) { Text(text = "Назад", fontSize = 22.sp) }
 
     }
 }
@@ -186,7 +225,7 @@ fun ScrollAreaVertical(
         items(advicesList) { adviceModelObject ->
             AdviceCardConstructor(
                 advice = adviceModelObject,
-                cardHeightParam = 150
+                cardHeightParam = 200
             )
         }
     }
@@ -208,7 +247,7 @@ fun ScrollAreaHorizontal(
         items(advicesList) { adviceModelObject ->
             AdviceCardConstructor(
                 advice = adviceModelObject,
-                cardHeightParam = 200
+                cardHeightParam = 250
             )
         }
     }
@@ -222,9 +261,9 @@ fun AdviceCardConstructor(
     val context: Context = LocalContext.current
 
     val adviceCardBackground = when {
-        advice.adviceModeDifficulty == "Легко" -> Color.Green
-        advice.adviceModeDifficulty == "Средняя" -> Color.Yellow
-        advice.adviceModeDifficulty == "Сложно" -> Color.Red
+        advice.adviceModeDifficulty == "Легко" -> GreenCard
+        advice.adviceModeDifficulty == "Средняя" -> YellowCard
+        advice.adviceModeDifficulty == "Сложно" -> RedCard
         else -> Color.LightGray
     }
     Card(
@@ -233,12 +272,7 @@ fun AdviceCardConstructor(
             .padding(8.dp),
         colors = CardDefaults.cardColors(
             containerColor = adviceCardBackground
-        ),
-        onClick = {
-            GoToCard(
-                context = context
-            )
-        }
+        )
     ) {
         Box(
             modifier = Modifier
@@ -250,7 +284,7 @@ fun AdviceCardConstructor(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-
+                //Текст названия
                 Text(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
@@ -262,13 +296,21 @@ fun AdviceCardConstructor(
                     textAlign = TextAlign.Center,
                     fontWeight = FontWeight.W500
                 )
-
+                //Текст сложности
                 Text(
                     modifier = Modifier
                         .align(Alignment.Start)
-                        .padding(horizontal = 10.dp),
-                    text = advice.adviceBodyText,
+                        .padding(start = 15.dp, end = 15.dp, top = 0.dp, bottom = 5.dp),
+                    text = "Сложность: " + advice.adviceModeDifficulty,
                     fontSize = 18.sp
+                )
+                //Текст описания
+                Text(
+                    modifier = Modifier
+                        .align(Alignment.Start)
+                        .padding(start = 15.dp, end = 15.dp, top = 5.dp, bottom = 10.dp),
+                    text = advice.adviceBodyText,
+                    fontSize = 16.sp
                 )
             }
         }
