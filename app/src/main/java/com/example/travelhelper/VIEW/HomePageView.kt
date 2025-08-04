@@ -51,6 +51,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.travelhelper.MODEL.Topics
 import com.example.travelhelper.VIEW.ui.theme.TravelHelperTheme
 import com.example.travelhelper.VIEW_MODEL.HomeScreenViewModel
+import com.example.travelhelper.VIEW_MODEL.InformationStorage
 
 class HomePageView : ComponentActivity() {
     private val viewModel by viewModels<HomeScreenViewModel> {
@@ -124,6 +125,11 @@ fun PortraitScreen(
             Button(
                 onClick = {
                     Log.d("MyLog", "Обновление данных...")
+
+                    // Выполняется 2 раза, для добавления в БД
+                    viewModel.TakeJsonFromApiAndSaveIt(
+                        context = context
+                    )
                     viewModel.TakeJsonFromApiAndSaveIt(
                         context = context
                     )
@@ -278,6 +284,7 @@ fun TopicCardsConstructor(
             containerColor = Color(color = topic.topicSecondColor.toColorInt())
         ),
         onClick = {
+            InformationStorage.mainTopicName = topic.topicTitle
             GoToCard(
                 context = context
             )

@@ -39,6 +39,8 @@ class HomeScreenViewModel(private val app: Application) : AndroidViewModel(app) 
             )
 
 
+
+
         } catch (e: Exception) {
             println("JSON Update failed")
         }
@@ -68,8 +70,7 @@ class HomeScreenViewModel(private val app: Application) : AndroidViewModel(app) 
             db.jsonCacheDao().saveCache(cache = cache)
         }
         viewModelScope.launch {
-            println(db.jsonCacheDao().getCache())
-
+            println("CACHE: ${db.jsonCacheDao().getCache()}")
         }
 
     }
@@ -79,30 +80,7 @@ class HomeScreenViewModel(private val app: Application) : AndroidViewModel(app) 
     fun ReadJson(
         context: Context
     ) {
-        try {
-            println("DElete data to check Upload Function")
-
-            val db = AppDatabase.getInstance(context)
-            var jsonText = ""
-            viewModelScope.launch {
-                // Удаление данных, для проверки считывания
-                db.jsonCacheDao().clearAllData()
-            }
-            println("Data was deleted! See all data what exist\n\n\n")
-            viewModelScope.launch {
-                // Получение данных
-                jsonText = db.jsonCacheDao().getCache().toString()
-            }
-            if (jsonText.isEmpty()) {
-                ReadStaticStaticJsonFile(context)
-            }
-
-        } catch (e: Exception) {
-            // Если сработала ошибка - прочитка стандартного файла
-            ReadStaticStaticJsonFile(context)
-        }
-
-
+        ReadStaticStaticJsonFile(context)
     }
 
 

@@ -3,12 +3,11 @@ package com.example.travelhelper.VIEW_MODEL
 // Объект-хранилище для статической информации
 object InformationStorage {
     // Получение и возвращение наименования выбранной тематики
-
-    var mainTopicName: String?
+    private var chooseTopicName: String = ""
+    var mainTopicName: String
         set(value) {
-            if (value != null){
-                mainTopicName = value
-            }
+            chooseTopicName = value
+
         }
-        get() = mainTopicName
+        get() = chooseTopicName
 }
